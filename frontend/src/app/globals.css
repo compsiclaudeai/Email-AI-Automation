@@ -1,0 +1,152 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --blue-50: #EFF6FF;
+  --blue-200: #BFDBFE;
+  --green-soft: #DCFCE7;
+  --amber-soft: #FEF3C7;
+  --red-soft: #FEE2E2;
+  --violet-soft: #EDE9FE;
+  --ok: #16A34A;
+  --warn: #D97706;
+
+  --bg: #F6F7F9;
+  --surface: #FFFFFF;
+  --surface-2: #FAFBFC;
+  --surface-3: #F1F3F6;
+  --line: #E6E8EC;
+  --line-strong: #D6DAE1;
+  --text: #0D1219;
+  --text-2: #4A5462;
+  --text-3: #8A93A0;
+
+  --shadow-1: 0 1px 2px rgba(13, 18, 25, .05);
+  --shadow-2: 0 1px 2px rgba(13, 18, 25, .04), 0 6px 20px -8px rgba(13, 18, 25, .10);
+  --shadow-3: 0 12px 40px -12px rgba(13, 18, 25, .22), 0 2px 6px rgba(13, 18, 25, .06);
+}
+
+[data-theme='dark'] {
+  --blue-50: #101A2E;
+  --blue-200: #1C2F56;
+  --green-soft: #0E2A1B;
+  --amber-soft: #2E2210;
+  --red-soft: #2E1517;
+  --violet-soft: #1E1836;
+
+  --bg: #0A0D13;
+  --surface: #11151D;
+  --surface-2: #141922;
+  --surface-3: #1A2029;
+  --line: #222833;
+  --line-strong: #2E3644;
+  --text: #E9EDF3;
+  --text-2: #A3ACBA;
+  --text-3: #6F7987;
+
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, .4);
+  --shadow-2: 0 1px 2px rgba(0, 0, 0, .35), 0 8px 24px -10px rgba(0, 0, 0, .6);
+  --shadow-3: 0 16px 48px -12px rgba(0, 0, 0, .7);
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    @apply bg-bg text-ink;
+    font-feature-settings: 'cv11', 'ss01';
+    transition: background-color 200ms, color 200ms;
+  }
+  ::selection {
+    background: var(--blue-50);
+    color: #1D4ED8;
+  }
+  *::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  *::-webkit-scrollbar-thumb {
+    background: var(--line-strong);
+    border-radius: 99px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+  }
+  :focus-visible {
+    outline: 2px solid #2563EB;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, .18);
+    border-radius: 8px;
+  }
+  /* --text-3 on --surface was 3.6:1 in dark mode, under the 4.5:1 minimum for
+     the small type it is used for throughout the inbox list. */
+  [data-theme='dark'] {
+    --text-3: #8A94A4;
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-surface border border-line rounded-lg shadow-e1;
+  }
+  .card-head {
+    @apply flex items-center justify-between gap-4 px-6 py-[18px] border-b border-line;
+  }
+  .card-title {
+    @apply text-sm font-semibold tracking-[-0.01em];
+  }
+  .card-sub {
+    @apply text-[12.5px] text-ink-3 mt-0.5;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 h-9 px-3.5 rounded-md text-[13.5px]
+           font-medium border border-line bg-surface text-ink whitespace-nowrap
+           transition-[background-color,border-color,transform,box-shadow] duration-200
+           hover:bg-surface-3 hover:border-line-strong active:translate-y-[0.5px]
+           disabled:opacity-45 disabled:pointer-events-none;
+  }
+  .btn-primary {
+    @apply bg-brand border-brand text-white hover:bg-brand-dark hover:border-brand-dark;
+  }
+  .btn-danger {
+    @apply text-danger hover:bg-danger-soft hover:border-transparent;
+  }
+  .btn-sm {
+    @apply h-[30px] px-2.5 text-[12.5px] rounded-sm;
+  }
+  .chip {
+    @apply inline-flex items-center gap-1.5 h-[22px] px-2 rounded-md text-[11.5px]
+           font-semibold bg-surface-3 text-ink-2 whitespace-nowrap;
+  }
+  .input {
+    @apply h-[34px] px-3 rounded-sm border border-line bg-surface text-[13px]
+           focus:outline-none focus:border-brand;
+  }
+  .eyebrow {
+    @apply text-[11px] font-semibold uppercase tracking-[0.07em] text-ink-3;
+  }
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+  .skeleton {
+    background: linear-gradient(90deg, var(--surface-3) 25%, var(--surface-2) 37%, var(--surface-3) 63%);
+    background-size: 400% 100%;
+    @apply animate-shimmer rounded-md;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

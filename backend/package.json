@@ -1,0 +1,59 @@
+{
+  "name": "email-automation-backend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AI Email Automation — Express + TypeScript + MongoDB API",
+  "main": "dist/server.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsx watch src/server.ts",
+    "doctor": "tsx src/scripts/doctor.ts",
+    "imap:check": "tsx src/scripts/imap-check.ts",
+    "seed": "tsx src/seed.ts",
+    "start": "node dist/server.js",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "tsc --noEmit",
+    "ai:check": "tsx src/scripts/ai-check.ts"
+  },
+  "dependencies": {
+    "@microsoft/microsoft-graph-client": "^3.0.7",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-rate-limit": "^7.4.0",
+    "googleapis": "^140.0.1",
+    "helmet": "^7.1.0",
+    "imapflow": "^1.0.164",
+    "jsonwebtoken": "^9.0.2",
+    "mongodb": "^7.5.0",
+    "mongoose": "^8.24.2",
+    "morgan": "^1.10.0",
+    "node-cron": "^3.0.3",
+    "nodemailer": "^9.0.5",
+    "openai": "^4.56.0",
+    "tesseract.js": "^5.1.1",
+    "unpdf": "^1.8.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/cookie-parser": "^1.4.7",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/jsonwebtoken": "^9.0.6",
+    "@types/morgan": "^1.9.9",
+    "@types/node": "^20.14.12",
+    "@types/node-cron": "^3.0.11",
+    "@types/nodemailer": "^8.0.1",
+    "@types/supertest": "^7.2.1",
+    "supertest": "^7.2.2",
+    "tsx": "^4.16.2",
+    "typescript": "5.9.3",
+    "vitest": "^2.1.9"
+  },
+  "engines": {
+    "node": ">=20 <23"
+  }
+}

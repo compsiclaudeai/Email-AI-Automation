@@ -1,0 +1,83 @@
+# Render Blueprint — free tier, no credit card.
+#
+# In Render: New → Blueprint → connect this repository. Everything below is
+# applied automatically except the values marked `sync: false`, which Render
+# prompts for so secrets never live in the repository.
+#
+# ONE THING TO KNOW BEFORE YOU DEPLOY
+# Free web services spin down after 15 minutes without traffic, and a spun-down
+# service runs no cron. This app syncs mailboxes on an internal 5-minute cron,
+# so it must be kept awake or automation stops. See DEPLOY.md, step 6.
+
+services:
+  - type: web
+    name: ai-email-automation-api
+    runtime: node
+    plan: free
+    region: oregon
+    rootDir: backend
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    # Also the URL the keep-alive pings.
+    healthCheckPath: /health
+
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: "20"
+
+      # --- prompted on first deploy -------------------------------------
+      - key: MONGODB_URI
+        sync: false          # Atlas connection string
+      - key: WEB_URL
+        sync: false          # https://<your-site>.netlify.app
+      - key: CORS_ORIGINS
+        sync: false          # same as WEB_URL
+      - key: APP_URL
+        sync: false          # this service's own https URL
+
+      # Generate each with: openssl rand -hex 32
+      #
+      # Deliberately NOT Render's `generateValue`: that produces a random
+      # string, and TOKEN_ENCRYPTION_KEY must be exactly 32 bytes of hex or the
+      # server refuses to start. TOKEN_ENCRYPTION_KEY must also never change
+      # once a mailbox is connected — it encrypts stored mailbox passwords and
+      # OAuth refresh tokens, and changing it makes every one unreadable.
+      - key: JWT_SECRET
+        sync: false
+      - key: TOKEN_ENCRYPTION_KEY
+        sync: false
+
+      # --- AI -----------------------------------------------------------
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: OPENAI_BASE_URL
+        sync: false          # e.g. https://openrouter.ai/api/v1
+      - key: OPENAI_MODEL
+        sync: false
+
+      # --- mail provider: fill in the one you use -----------------------
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: GOOGLE_CALLBACK_URL
+        sync: false          # https://<this service>/api/auth/google/callback
+
+      # --- free-tier tuning ---------------------------------------------
+      # 512 MB of RAM is not enough to OCR scanned attachments comfortably.
+      # Text-based PDFs are still read; only image OCR is off.
+      - key: ATTACHMENT_OCR
+        value: "false"
+      - key: ATTACHMENT_MAX_PER_MESSAGE
+        value: "3"
+      # The filesystem is wiped on every restart, so the OCR language file is
+      # read from the repository rather than downloaded each time.
+      - key: ATTACHMENT_OCR_PATH
+        value: "./"
+      # Smaller batches keep memory and each request well inside the limits.
+      - key: SYNC_BATCH_SIZE
+        value: "25"
+      - key: SYNC_CRON
+        value: "*/5 * * * *"

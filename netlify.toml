@@ -1,0 +1,26 @@
+# Netlify builds and serves only the Next.js frontend. The Express backend is a
+# long-running server with a cron loop and persistent IMAP connections, so it
+# has to live somewhere that keeps a process alive — Render, Railway, a VPS.
+
+[build]
+  base    = "frontend"
+  command = "npm run build"
+  publish = "frontend/.next"
+
+# Without this plugin Netlify treats the build as a static site and every route
+# 404s, because Next needs a runtime to serve pages and route handlers.
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Ported from frontend/vercel.json, which only applied on Vercel. Netlify sets
+# none of these by default, so without this block the deployed frontend would
+# serve every page with no clickjacking or MIME-sniffing protection.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy        = "strict-origin-when-cross-origin"
+    X-Frame-Options        = "SAMEORIGIN"
